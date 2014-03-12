@@ -1,0 +1,83 @@
+<html> 
+<style>
+span {
+  color: slategray;
+}
+</style>
+<body>
+<span>
+Click to toggle scale
+</span>
+</body>
+
+<script src="js/three.min.js"></script>
+
+<script>
+
+    var camera, scene, renderer;
+    var geometry, material, mesh;
+
+    var toggleScale = 0;
+
+    init();
+    animate();
+
+    function init() {
+
+        camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+        camera.position.z = 1000;
+
+        scene = new THREE.Scene();
+
+        geometry = new THREE.SphereGeometry( 100, 16, 16 );
+
+        /*
+        for (var i = 0, l = geometry.vertices.length; i < l; i++) {
+          var value = geometry.vertices[i].z;
+          var data = Math.max(-10, Math.min(10, value + .8 * Math.random() - .4 + .2 * Math.cos(i)));
+          geometry.vertices[i].z = data;
+        }
+         */
+
+        material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+
+        mesh = new THREE.Mesh( geometry, material );
+        scene.add( mesh );
+
+        renderer = new THREE.CanvasRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        document.body.appendChild( renderer.domElement );
+        //document.body.appendChild( '<pre>Click to toggle scale</pre>' );
+
+        window.addEventListener( 'mousedown', onMouseDown, false );
+
+    }
+
+    function onMouseDown() {
+
+        toggleScale ++;
+        toggleScale %= 2;
+
+    }
+
+    function animate() {
+
+        // note: three.js includes requestAnimationFrame shim
+        requestAnimationFrame( animate );
+
+        mesh.rotation.x += 0.01;
+        mesh.rotation.y += 0.02;
+
+        if (toggleScale == 0)
+            mesh.scale.setLength( mesh.scale.length() + 0.01 );
+
+        renderer.render( scene, camera );
+
+    }
+
+</script>
+
+</html>
+
+
